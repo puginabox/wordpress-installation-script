@@ -53,8 +53,24 @@ echo "Cleaning up install files..."
 #remove zip file
 rm latest.tar.gz
 #remove bash script
-rm wp.sh
+#rm wp.sh
 echo "========================="
 echo "Good Job! Wordpress Install is complete."
 echo "========================="
+
+echo "========================="
+echo "Now starting up a server on port 8888"
+echo "========================="
+# Start an HTTP server from a directory, optionally specifying the port
+function server() {
+  local port="${1:-8888}"
+  open "http://localhost:${port}/"
+  # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+  # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+  python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+}
+echo "Booting her up now...."
+server
+
+
 fi
